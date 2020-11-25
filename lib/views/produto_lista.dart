@@ -5,35 +5,36 @@ class ProdutoLista extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Lista de produtos')),
-      persistentFooterButtons: <Widget>[
-        Container(
-          width: MediaQuery.of(context).copyWith().size.width,
-          child: Row(
-            children: [
-              Expanded(
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    // conteudo aqui
-                  },
-                  label: Text('Produto'),
-                  icon: Icon(Icons.my_library_add_rounded),
-                  backgroundColor: Colors.black,
-                ),
-              ),
-              Expanded(
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    // conteudo aqui
-                  },
-                  label: Text('Categoria'),
-                  icon: Icon(Icons.my_library_add_rounded),
-                  backgroundColor: Colors.black,
-                ),
-              )
-            ],
-          ),
-        )
-      ],
+      bottomNavigationBar: new BottomAppBar(
+        color: Colors.black,
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+              padding: EdgeInsets.only(
+                  left: 25.0, right: 25.0, top: 20.0, bottom: 20.0),
+              icon: Icon(Icons.home, size: 35),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+            IconButton(
+              padding: EdgeInsets.only(
+                  left: 25.0, right: 25.0, top: 20.0, bottom: 20.0),
+              icon: Icon(Icons.app_registration, size: 35),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        onPressed: () {},
+      ),
       body: ListView.separated(
         separatorBuilder: (_, __) =>
             Divider(height: 2, color: Theme.of(context).primaryColor),
