@@ -1,6 +1,33 @@
+import 'package:app/models/produtos_para_listar.dart';
+import 'package:app/views/produto_adicionar.dart';
 import 'package:flutter/material.dart';
 
+import 'categoria_lista.dart';
+
 class ProdutoLista extends StatelessWidget {
+  final produtos = [
+    new ProdutosParaListar(
+      prodId: 1,
+      nome: "Controle PlayStation",
+      descricao: "Controle oficial do playStation 5",
+      valor: 550,
+      image: "assets/images/prod.jpg",
+    ),
+    new ProdutosParaListar(
+      prodId: 2,
+      nome: "Controle XBox",
+      descricao: "Controle oficial XBox",
+      valor: 500,
+      image: "assets/images/xbox.jpg",
+    ),
+    new ProdutosParaListar(
+      prodId: 3,
+      nome: "Controle nintendo Switch",
+      descricao: "Controle oficial do nintendo Switch",
+      valor: 850,
+      image: "assets/images/switch.jpg",
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +50,10 @@ class ProdutoLista extends StatelessWidget {
                   left: 25.0, right: 25.0, top: 20.0, bottom: 20.0),
               icon: Icon(Icons.app_registration, size: 35),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => CategoriaLista()));
+              },
             ),
           ],
         ),
@@ -33,7 +63,10 @@ class ProdutoLista extends StatelessWidget {
         child: const Icon(Icons.add),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => AddProdutoBody()));
+        },
       ),
       body: ListView.separated(
         separatorBuilder: (_, __) =>
@@ -41,10 +74,10 @@ class ProdutoLista extends StatelessWidget {
         itemBuilder: (_, index) {
           return ListTile(
             title: Text(
-              'Produto Nome',
+              produtos[index].nome,
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
-            subtitle: Text('Produto categoria'),
+            subtitle: Text(produtos[index].descricao),
             leading: ConstrainedBox(
               constraints: BoxConstraints(
                 minWidth: 100,
@@ -52,11 +85,11 @@ class ProdutoLista extends StatelessWidget {
                 maxWidth: 100,
                 maxHeight: 100,
               ),
-              child: Image.asset('assets/images/prod.jpg', fit: BoxFit.cover),
+              child: Image.asset(produtos[index].image, fit: BoxFit.cover),
             ),
           );
         },
-        itemCount: 10,
+        itemCount: produtos.length,
       ),
     );
   }
