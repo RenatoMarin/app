@@ -2,12 +2,12 @@ import 'package:app/views/produto_lista.dart';
 import 'package:flutter/material.dart';
 import 'categoria_lista.dart';
 
-class AddProdutoBody extends StatefulWidget {
+class EditCategoryBody extends StatefulWidget {
   @override
-  ProdutoAdicionar createState() => ProdutoAdicionar();
+  CategoriaEditar createState() => CategoriaEditar();
 }
 
-class ProdutoAdicionar extends State<AddProdutoBody> {
+class CategoriaEditar extends State<EditCategoryBody> {
   String nomeCidade = "";
   var _cidades = ['Eletrônicos', 'Jogos', 'Mobília'];
   var _itemSelecionado = 'Eletrônicos';
@@ -15,11 +15,11 @@ class ProdutoAdicionar extends State<AddProdutoBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: criaProdutoAdicionar(),
+      body: criaCategoriaEditar(),
     );
   }
 
-  criaProdutoAdicionar() {
+  criaCategoriaEditar() {
     return Scaffold(
       appBar: AppBar(title: Text('Adicionar produto')),
       body: Padding(

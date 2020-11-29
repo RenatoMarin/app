@@ -1,5 +1,6 @@
 import 'package:app/models/produtos_para_listar.dart';
 import 'package:app/views/produto_adicionar.dart';
+import 'package:app/views/produto_single.dart';
 import 'package:flutter/material.dart';
 
 import 'categoria_lista.dart';
@@ -87,6 +88,10 @@ class ProdutoLista extends StatelessWidget {
               ),
               child: Image.asset(produtos[index].image, fit: BoxFit.cover),
             ),
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => SingleProdutoBody()));
+            },
           );
         },
         itemCount: produtos.length,
