@@ -78,7 +78,7 @@ class _ProdutoListaState extends State<ProdutoLista> {
         body: Builder(
           builder: (_) {
             if (_isLoading) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             }
             if (_apiResponse.error) {
               return Center(child: Text(_apiResponse.errorMessage));
