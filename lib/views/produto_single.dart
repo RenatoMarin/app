@@ -1,9 +1,8 @@
 import 'package:app/models/produto.dart';
+import 'package:app/views/produto_editar.dart';
 import 'package:flutter/widgets.dart';
 import 'package:app/models/api_response.dart';
 import 'package:app/services/produto_service.dart';
-import 'package:app/views/produto_adicionar.dart';
-import 'package:app/views/produto_deletar.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'categoria_lista.dart';
@@ -20,8 +19,8 @@ class SingleProdutoBody extends StatefulWidget {
 class _ProdutoListaState extends State<SingleProdutoBody> {
   ProdutosService get service => GetIt.I<ProdutosService>();
   APIResponse<List<ProdSingle>> _apiResponse;
-
-  int prodId;
+  int varId;
+  
   bool _isLoading = false;
 
   @override
@@ -77,7 +76,9 @@ class _ProdutoListaState extends State<SingleProdutoBody> {
           foregroundColor: Colors.white,
           onPressed: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddProdutoBody()));
+                .push(MaterialPageRoute(builder: (_) => EditProdutoBody(varId: widget.varId))).then((data) {
+                  _fetchProducts();
+                });
           },
         ),
         body: Builder(

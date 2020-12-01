@@ -1,5 +1,6 @@
 class ProdSingle {
   int prodId;
+  int catId;
   String catName;
   String nome;
   String descricao;
@@ -8,11 +9,12 @@ class ProdSingle {
 
   //Construtor
   ProdSingle(
-      {this.prodId, this.catName, this.nome, this.descricao, this.valor, this.image});
+      {this.prodId, this.catId, this.catName, this.nome, this.descricao, this.valor, this.image});
   
   factory ProdSingle.fromJson(Map<String, dynamic> item){
     return ProdSingle(
       prodId: item['prodId'],
+      catId: item['catId'],
       catName: item['catName'],
       nome: item['nome'],
       descricao: item['descricao'],

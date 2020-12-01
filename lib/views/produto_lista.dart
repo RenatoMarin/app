@@ -96,6 +96,27 @@ class _ProdutoListaState extends State<ProdutoLista> {
                     //showDialog é FUTURE
                     final result = await showDialog(
                         context: context, builder: (_) => ProdutoDeletar());
+                    if (result){
+                      final deleteResult = await service.deletarProduto(_apiResponse.data[index].prodId.toString());
+                      var message;
+                      if(deleteResult != null && deleteResult.data == true) {
+                        message = "Produto foi deletado!";
+                      } else {
+                        message = deleteResult?.errorMessage ?? "Um erro ocorreu";
+                      }
+                      showDialog(
+                        context: context, builder: (_) => AlertDialog(
+                          title: Text('Pronto'),
+                          content: Text(message),
+                          actions: <Widget>[
+                            FlatButton(child: Text('Ok'), onPressed: () {
+                              Navigator.of(context).pop();
+                            })
+                          ],
+                      ));
+
+                      return deleteResult?.data ?? false;
+                    }
                     return result;
                   },
                   background: Container(
