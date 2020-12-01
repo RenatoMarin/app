@@ -51,7 +51,10 @@ class _ProdutoListaState extends State<ProdutoLista> {
                     left: 25.0, right: 25.0, top: 20.0, bottom: 20.0),
                 icon: Icon(Icons.home, size: 35),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => ProdutoLista()));
+                },
               ),
               IconButton(
                 padding: EdgeInsets.only(
@@ -129,10 +132,10 @@ class _ProdutoListaState extends State<ProdutoLista> {
                   ),
                   child: ListTile(
                     title: Text(
-                      _apiResponse.data[index].nome,
+                      'Nome: '+ _apiResponse.data[index].nome,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
-                    subtitle: Text('Categoria: '+ _apiResponse.data[index].catName),
+                    subtitle: Text('Valor: '+ _apiResponse.data[index].valor.toString() +' Reais'),
                     leading: ConstrainedBox(
                       constraints: BoxConstraints(
                         minWidth: 100,

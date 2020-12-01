@@ -43,12 +43,23 @@ class ProdutosService {
         error: true, errorMessage: 'Um erro aconteceu 2'));
   }
 
+  Future<APIResponse<ProdSingle>> getProdID(String prodId) {
+    return http.get(API + '/produtos/' + prodId, headers: headers).then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        return APIResponse<ProdSingle>(data: ProdSingle.fromJson(jsonData[0]));
+      }
+      return APIResponse<ProdSingle>(error: true, errorMessage: 'Um erro aconteceu 5');
+    })
+    .catchError((_) => APIResponse<ProdSingle>(error: true, errorMessage: 'Um erro aconteceu 2'));
+  }
+
   Future<APIResponse<bool>> criarProduto(ProdutosParaAdicionar item) {
     return http
         .post(API + '/produtos',
             headers: headers, body: json.encode(item.toJson()))
         .then((data) {
-      if (data.statusCode == 201 || data.statusCode == 204) {
+      if (data.statusCode == 201 || data.statusCode == 200) {
         return APIResponse<bool>(data: true);
       }
       return APIResponse<bool>(

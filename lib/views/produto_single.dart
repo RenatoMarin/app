@@ -114,18 +114,18 @@ class _ProdutoListaState extends State<SingleProdutoBody> {
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            child: 
-                            Text(
-                              'Categoria: ' + _apiResponse.data[index].catName,
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: Container(
+                        //     child: 
+                        //     Text(
+                        //       'Categoria: ' + _apiResponse.data[index].catName,
+                        //       style: TextStyle(
+                        //         color: Colors.grey[500],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(

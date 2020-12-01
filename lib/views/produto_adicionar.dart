@@ -4,28 +4,40 @@ import 'package:app/views/produto_lista.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'categoria_lista.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AddProdutoBody extends StatefulWidget {
   @override
   ProdutoAdicionar createState() => ProdutoAdicionar();
 }
 
-class CategoId {
-  const CategoId(this.catID,this.catName);
-  final int catID;
-  final String catName;
-}
-
 class ProdutoAdicionar extends State<AddProdutoBody> {
-  CategoId selectedCatego;
-  List<CategoId> categos = <CategoId>[const CategoId(1,'Jogos'), const CategoId(2,'Eletrônicos')];
-  final _formKey = GlobalKey<FormState>();
+  String _mySelection;
 
+  final String url = "http://10.0.2.2:3000/categoria";
+  List data = List();
+  Future<String> getSWData() async {
+    var res = await http.get(Uri.encodeFull(url), headers: {'Content-Type':'application/json'});
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      data = resBody;
+    });
+
+    print(resBody);
+
+    return "Sucess";
+  }
+
+  final _formKey = GlobalKey<FormState>();
   ProdutosService get produtoService => GetIt.I<ProdutosService>();
 
   @override
   void initState() {
-    selectedCatego=categos[0];
+    this.getSWData();
+    super.initState();
   }
   
   TextEditingController _nameController = TextEditingController();
@@ -112,7 +124,7 @@ class ProdutoAdicionar extends State<AddProdutoBody> {
               )
             ),
             new Center(
-              child: new DropdownButtonFormField<CategoId>(
+              child: new DropdownButtonFormField(
                 decoration: new InputDecoration(
                   labelText: 'Selecionar categoria',
                   labelStyle: new TextStyle(fontSize: 22.0)
@@ -122,24 +134,20 @@ class ProdutoAdicionar extends State<AddProdutoBody> {
                 elevation: 16,
                 isExpanded: true,
                 style: TextStyle(color: Colors.black),
-                value: selectedCatego,
-                onChanged: (CategoId newValue) {
-                  setState(() {
-                    selectedCatego = newValue;
-                  });
-                },
-                items: categos.map((CategoId categoId) {
-                  return new DropdownMenuItem<CategoId>(
-                    value: categoId,
-                    child: new Text(
-                      categoId.catName,
-                      style: new TextStyle(color: Colors.black),
-                    ),
+                items: data.map((item) {
+                  return new DropdownMenuItem(
+                    child: new Text(item['nome']),
+                    value: item['catId'].toString(),
                   );
                 }).toList(),
-              )
+                onChanged: (newVal) {
+                  setState(() {
+                    _mySelection = newVal;
+                  });
+                },
+                value: _mySelection,
+              ),
             ),
-            //new Text("selected user name is ${selectedCatego.catName} : and Id is : ${selectedCatego.catID}"),
             Container(
               height: 16,
             ),
@@ -153,8 +161,8 @@ class ProdutoAdicionar extends State<AddProdutoBody> {
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     final produto = ProdutosParaAdicionar(
-                      catId: selectedCatego.catID,
-                      catName: selectedCatego.catName,
+                      catId: int.parse(_mySelection),
+                      catName: _mySelection,
                       nome: _nameController.text,
                       descricao: _descricaoController.text,
                       valor: int.parse(_valorController.text),
