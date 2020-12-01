@@ -19,7 +19,6 @@ class CategoId {
 class ProdutoAdicionar extends State<AddProdutoBody> {
   CategoId selectedCatego;
   List<CategoId> categos = <CategoId>[const CategoId(1,'Jogos'), const CategoId(2,'Eletrônicos')];
-
   final _formKey = GlobalKey<FormState>();
 
   ProdutosService get produtoService => GetIt.I<ProdutosService>();

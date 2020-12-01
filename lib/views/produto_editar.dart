@@ -12,6 +12,9 @@ class ProdutoEditar extends State<EditProdutoBody> {
   var _cidades = ['Eletrônicos', 'Jogos', 'Mobília'];
   var _itemSelecionado = 'Eletrônicos';
 
+  String prodId;
+  ProdutoEditar({this.prodId});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:app/models/api_response.dart';
 import 'package:app/models/produtos_para_listar.dart';
 import 'package:app/services/produto_service.dart';
@@ -16,7 +17,7 @@ class ProdutoLista extends StatefulWidget {
 class _ProdutoListaState extends State<ProdutoLista> {
   ProdutosService get service => GetIt.I<ProdutosService>();
   APIResponse<List<ProdutosParaListar>> _apiResponse;
-
+  int varId;
   bool _isLoading = false;
 
   @override
@@ -125,7 +126,7 @@ class _ProdutoListaState extends State<ProdutoLista> {
                     ),
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => SingleProdutoBody()));
+                          builder: (_) => SingleProdutoBody(varId: _apiResponse.data[index].prodId)));
                     },
                   ),
                 );
