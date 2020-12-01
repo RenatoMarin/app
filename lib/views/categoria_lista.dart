@@ -13,22 +13,22 @@ class CategoriaLista extends StatefulWidget {
 }
 
 class _CategoriaListaState extends State<CategoriaLista> {
-  CategoriasService get service => GetIt.I<CategoriasService>();
+  CategoriasService get serviceCatList => GetIt.I<CategoriasService>();
   APIResponse<List<CategoriaParaListar>> _apiResponse;
-  int varId;
+  int catId;
   bool _isLoading = false;
 
   @override
   void initState() {
-    _fetchProducts();
+    _fetchCategories();
     super.initState();
   }
 
-  _fetchProducts() async {
+  _fetchCategories() async {
     setState(() {
       _isLoading = true;
     });
-    _apiResponse = await service.getCategoriaLista();
+    _apiResponse = await serviceCatList.getCategoriaLista();
     setState(() {
       _isLoading = false;
     });
@@ -74,7 +74,10 @@ class _CategoriaListaState extends State<CategoriaLista> {
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => CateogiaModificar()));
+            .push(MaterialPageRoute(builder: (_) => CateogiaModificar()))
+            .then((_) {
+              _fetchCategories();
+            });
         },
       ),
       body: Builder(
@@ -96,9 +99,28 @@ class _CategoriaListaState extends State<CategoriaLista> {
                 },
                 confirmDismiss: (direction) async {
                   final result = await showDialog(
-                    context: context,
-                    builder: (_) => CategoriaDeletar()
-                  );
+                  context: context,
+                  builder: (_) => CategoriaDeletar());
+                  if(result){
+                    final deleteResultCat = await serviceCatList.deletarCategoria(_apiResponse.data[index].catId.toString());
+                    var message;
+                    if(deleteResultCat != null && deleteResultCat.data == true){
+                      message = 'A categoria foi deletada';
+                    } else {
+                      message = deleteResultCat?.errorMessage ?? 'Um erro acorreu';
+                    }
+                    showDialog(
+                      context: context, builder: (_) => AlertDialog(
+                        title: Text('Pronto'),
+                        content: Text(message),
+                        actions: <Widget>[
+                          FlatButton(child: Text('Ok'), onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                        ]
+                      ));
+                    return deleteResultCat?.data ?? false;
+                  }
                   return result;
                 },
                 background: Container(
@@ -114,9 +136,11 @@ class _CategoriaListaState extends State<CategoriaLista> {
                     _apiResponse.data[index].nome,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
-                  subtitle: Text('Categoria: '+ _apiResponse.data[index].nome),
+                  subtitle: Text('Descrição: '+ _apiResponse.data[index].descricao),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => CateogiaModificar(catId: _apiResponse.data[index].catId.toString())));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => CateogiaModificar(catId: _apiResponse.data[index].catId))).then((data){
+                      _fetchCategories();
+                    });
                   },
                 ),
               );
