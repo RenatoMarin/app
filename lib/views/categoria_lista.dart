@@ -1,27 +1,39 @@
+import 'package:app/models/api_response.dart';
 import 'package:app/models/categoria_para_listar.dart';
+import 'package:app/services/categoria_service.dart';
 import 'package:app/views/produto_lista.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'categoria_deletar.dart';
+import 'categoria_modificar.dart';
 
-import 'categoria_adicionar.dart';
+class CategoriaLista extends StatefulWidget {
+  @override
+  _CategoriaListaState createState() => _CategoriaListaState();
+}
 
-class CategoriaLista extends StatelessWidget {
-  final categorias = [
-    new CategoriaParaListar(
-      catId: 1,
-      nome: "Eletrônicos",
-      descricao: "Categoria usada para eletrônicos em geral",
-    ),
-    new CategoriaParaListar(
-      catId: 2,
-      nome: "Jogos",
-      descricao: "Categoria usada para jogos",
-    ),
-    new CategoriaParaListar(
-      catId: 3,
-      nome: "Mobília",
-      descricao: "Categoria usada para produtos de mobília",
-    ),
-  ];
+class _CategoriaListaState extends State<CategoriaLista> {
+  CategoriasService get service => GetIt.I<CategoriasService>();
+  APIResponse<List<CategoriaParaListar>> _apiResponse;
+  int varId;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    _fetchProducts();
+    super.initState();
+  }
+
+  _fetchProducts() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _apiResponse = await service.getCategoriaLista();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,23 +74,57 @@ class CategoriaLista extends StatelessWidget {
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => CategoriaAdicionar()));
+              .push(MaterialPageRoute(builder: (_) => CateogiaModificar()));
         },
       ),
-      body: ListView.separated(
-        separatorBuilder: (_, __) =>
-            Divider(height: 2, color: Theme.of(context).primaryColor),
-        itemBuilder: (_, index) {
-          return ListTile(
-            title: Text(
-              categorias[index].nome,
-              style: TextStyle(color: Theme.of(context).primaryColor),
-            ),
-            subtitle: Text(categorias[index].descricao),
+      body: Builder(
+        builder: (_) {
+          if (_isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (_apiResponse.error) {
+            return Center(child: Text(_apiResponse.errorMessage));
+          }
+          return ListView.separated(
+            separatorBuilder: (_, __) =>
+                Divider(height: 2, color: Theme.of(context).primaryColor),
+            itemBuilder: (_, index) {
+              return Dismissible(
+                key: ValueKey(_apiResponse.data[index].catId),
+                direction: DismissDirection.startToEnd,
+                onDismissed: (direction) {
+                },
+                confirmDismiss: (direction) async {
+                  final result = await showDialog(
+                    context: context,
+                    builder: (_) => CategoriaDeletar()
+                  );
+                  return result;
+                },
+                background: Container(
+                  color: Colors.red,
+                  padding: EdgeInsets.only(left: 16),
+                  child: Align(
+                    child: Icon(Icons.delete, color: Colors.white),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                child: ListTile(
+                  title: Text(
+                    _apiResponse.data[index].nome,
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                  subtitle: Text('Categoria: '+ _apiResponse.data[index].nome),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => CateogiaModificar(catId: _apiResponse.data[index].catId.toString())));
+                  },
+                ),
+              );
+            },
+            itemCount: _apiResponse.data.length,
           );
         },
-        itemCount: categorias.length,
-      ),
+      )
     );
   }
 }
